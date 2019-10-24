@@ -163,7 +163,7 @@ type Config interface {
 }
 
 // LiveConfig is an implementation of Config for live values.
-type LiveConfig struct {}
+type LiveConfig struct{}
 
 var _ Config = &LiveConfig{}
 
@@ -314,8 +314,8 @@ func isRequired(key string) bool {
 
 // TestConfig is an implementation of Config for testing.
 type TestConfig struct {
-	SSHFn    func(user, host, keyPath string, port int, opts ssh.Options) runner.Runner
-	v        *viper.Viper
+	SSHFn func(user, host, keyPath string, port int, opts ssh.Options) runner.Runner
+	v     *viper.Viper
 }
 
 var _ Config = &TestConfig{}
@@ -326,7 +326,7 @@ func NewTestConfig() *TestConfig {
 		SSHFn: func(u, h, kp string, p int, opts ssh.Options) runner.Runner {
 			return &MockRunner{}
 		},
-		v:        viper.New(),
+		v: viper.New(),
 	}
 }
 
