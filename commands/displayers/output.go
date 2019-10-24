@@ -64,6 +64,29 @@ func (d *Displayer) Display() error {
 	}
 }
 
+// DisplayBetter ends up rendering the content in one of two formats (text|json)
+func (d *Displayer) DisplayBetter(displayable Displayable) error {
+	switch d.OutputType {
+	case "json":
+		if containsOnlyNilSlice(displayable) {
+			_, err := d.Out.Write([]byte("[]"))
+			return err
+		}
+		return displayable.JSON(d.Out)
+	case "text":
+		var cols []string
+		for _, c := range strings.Split(strings.Join(strings.Fields(d.ColumnList), ""), ",") {
+			if c != "" {
+				cols = append(cols, c)
+			}
+		}
+
+		return DisplayText(displayable, d.Out, d.NoHeaders, cols)
+	default:
+		return fmt.Errorf("unknown output type")
+	}
+}
+
 // DisplayText writes tabbed content to the passed in io.Writer
 // while potentially adding or removing headers.
 func DisplayText(item Displayable, out io.Writer, noHeaders bool, includeCols []string) error {
