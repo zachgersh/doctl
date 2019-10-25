@@ -22,7 +22,6 @@ import (
 	"github.com/digitalocean/doctl/commands"
 	"github.com/digitalocean/doctl/commands/account"
 	"github.com/digitalocean/doctl/commands/compute"
-	"github.com/digitalocean/doctl/commands/compute/droplet"
 	"github.com/digitalocean/doctl/commands/displayers"
 	"github.com/digitalocean/doctl/do"
 	"github.com/digitalocean/godo"
@@ -62,10 +61,7 @@ func main() {
 	}
 
 	root.AddCommand(account.NewAccountCmd(v, do.NewAccountService(authClient), displayer))
-
-	computeCmd := compute.NewCommand()
-	computeCmd.AddCommand(droplet.NewCommand(v, do.NewDropletsService(authClient), displayer))
-
+	computeCmd := compute.NewCommand(v, authClient, displayer)
 	root.AddCommand(computeCmd)
 
 	if err := root.Execute(); err != nil {
