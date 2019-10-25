@@ -72,10 +72,6 @@ func main() {
 
 // NewGodoClient needs to support `trace`.
 func NewGodoClient(trace bool, url, token string) (*godo.Client, error) {
-	if token == "" {
-		return nil, fmt.Errorf("access token is required. (hint: run 'doctl auth init')")
-	}
-
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})
 	oauthClient := oauth2.NewClient(context.Background(), tokenSource)
 

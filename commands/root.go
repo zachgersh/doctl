@@ -29,7 +29,7 @@ func NewRootCmd(v *viper.Viper) *cobra.Command {
 	flagSet.StringP(doctl.ArgOutput, "o", "text", "output format [text|json]")
 	v.BindPFlag("output", flagSet.Lookup(doctl.ArgOutput))
 
-	flagSet.StringP(doctl.ArgContext, "", "", "authentication context")
+	flagSet.StringP(doctl.ArgContext, "", "default", "authentication context")
 	v.BindPFlag("context", flagSet.Lookup(doctl.ArgContext))
 
 	flagSet.BoolP("trace", "", false, "trace api access")
