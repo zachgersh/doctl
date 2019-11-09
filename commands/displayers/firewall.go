@@ -15,7 +15,6 @@ package displayers
 
 import (
 	"fmt"
-	"io"
 	"strconv"
 	"strings"
 
@@ -28,8 +27,8 @@ type Firewall struct {
 
 var _ Displayable = &Firewall{}
 
-func (f *Firewall) JSON(out io.Writer) error {
-	return writeJSON(f.Firewalls, out)
+func (f *Firewall) JSON() (string, error) {
+	return writeJSON(f.Firewalls)
 }
 
 func (f *Firewall) Cols() []string {

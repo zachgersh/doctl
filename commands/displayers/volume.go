@@ -15,7 +15,6 @@ package displayers
 
 import (
 	"fmt"
-	"io"
 	"strconv"
 	"strings"
 
@@ -28,8 +27,8 @@ type Volume struct {
 
 var _ Displayable = &Volume{}
 
-func (a *Volume) JSON(out io.Writer) error {
-	return writeJSON(a.Volumes, out)
+func (a *Volume) JSON() (string, error) {
+	return writeJSON(a.Volumes)
 
 }
 

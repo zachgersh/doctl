@@ -14,8 +14,6 @@ limitations under the License.
 package displayers
 
 import (
-	"io"
-
 	"github.com/digitalocean/doctl/do"
 )
 
@@ -25,8 +23,8 @@ type Image struct {
 
 var _ Displayable = &Image{}
 
-func (gi *Image) JSON(out io.Writer) error {
-	return writeJSON(gi.Images, out)
+func (gi *Image) JSON() (string, error) {
+	return writeJSON(gi.Images)
 }
 
 func (gi *Image) Cols() []string {

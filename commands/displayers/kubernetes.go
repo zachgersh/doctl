@@ -1,7 +1,6 @@
 package displayers
 
 import (
-	"io"
 	"strings"
 
 	"github.com/digitalocean/doctl/do"
@@ -15,8 +14,8 @@ type KubernetesClusters struct {
 
 var _ Displayable = &KubernetesClusters{}
 
-func (clusters *KubernetesClusters) JSON(out io.Writer) error {
-	return writeJSON(clusters.KubernetesClusters, out)
+func (clusters *KubernetesClusters) JSON() (string, error) {
+	return writeJSON(clusters.KubernetesClusters)
 }
 
 func (clusters *KubernetesClusters) Cols() []string {
@@ -120,8 +119,8 @@ type KubernetesNodePools struct {
 
 var _ Displayable = &KubernetesNodePools{}
 
-func (nodePools *KubernetesNodePools) JSON(out io.Writer) error {
-	return writeJSON(nodePools.KubernetesNodePools, out)
+func (nodePools *KubernetesNodePools) JSON() (string, error) {
+	return writeJSON(nodePools.KubernetesNodePools)
 }
 
 func (nodePools *KubernetesNodePools) Cols() []string {
@@ -176,8 +175,8 @@ type KubernetesVersions struct {
 
 var _ Displayable = &KubernetesVersions{}
 
-func (versions *KubernetesVersions) JSON(out io.Writer) error {
-	return writeJSON(versions.KubernetesVersions, out)
+func (versions *KubernetesVersions) JSON() (string, error) {
+	return writeJSON(versions.KubernetesVersions)
 }
 
 func (versions *KubernetesVersions) Cols() []string {
@@ -215,8 +214,8 @@ type KubernetesRegions struct {
 
 var _ Displayable = &KubernetesRegions{}
 
-func (regions *KubernetesRegions) JSON(out io.Writer) error {
-	return writeJSON(regions.KubernetesRegions, out)
+func (regions *KubernetesRegions) JSON() (string, error) {
+	return writeJSON(regions.KubernetesRegions)
 }
 
 func (regions *KubernetesRegions) Cols() []string {
@@ -254,8 +253,8 @@ type KubernetesNodeSizes struct {
 
 var _ Displayable = &KubernetesNodeSizes{}
 
-func (nodeSizes *KubernetesNodeSizes) JSON(out io.Writer) error {
-	return writeJSON(nodeSizes.KubernetesNodeSizes, out)
+func (nodeSizes *KubernetesNodeSizes) JSON() (string, error) {
+	return writeJSON(nodeSizes.KubernetesNodeSizes)
 }
 
 func (nodeSizes *KubernetesNodeSizes) Cols() []string {

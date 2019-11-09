@@ -14,8 +14,6 @@ limitations under the License.
 package displayers
 
 import (
-	"io"
-
 	"github.com/digitalocean/doctl/do"
 )
 
@@ -26,8 +24,8 @@ type Databases struct {
 
 var _ Displayable = &Databases{}
 
-func (d *Databases) JSON(out io.Writer) error {
-	return writeJSON(d.Databases, out)
+func (d *Databases) JSON() (string, error) {
+	return writeJSON(d.Databases)
 }
 
 func (d *Databases) Cols() []string {
@@ -114,8 +112,8 @@ type DatabaseBackups struct {
 
 var _ Displayable = &DatabaseBackups{}
 
-func (db *DatabaseBackups) JSON(out io.Writer) error {
-	return writeJSON(db.DatabaseBackups, out)
+func (db *DatabaseBackups) JSON() (string, error) {
+	return writeJSON(db.DatabaseBackups)
 }
 
 func (db *DatabaseBackups) Cols() []string {
@@ -152,8 +150,8 @@ type DatabaseUsers struct {
 
 var _ Displayable = &DatabaseUsers{}
 
-func (du *DatabaseUsers) JSON(out io.Writer) error {
-	return writeJSON(du.DatabaseUsers, out)
+func (du *DatabaseUsers) JSON() (string, error) {
+	return writeJSON(du.DatabaseUsers)
 }
 
 func (du *DatabaseUsers) Cols() []string {
@@ -193,8 +191,8 @@ type DatabaseConnection struct {
 
 var _ Displayable = &DatabaseConnection{}
 
-func (dc *DatabaseConnection) JSON(out io.Writer) error {
-	return writeJSON(dc.DatabaseConnection, out)
+func (dc *DatabaseConnection) JSON() (string, error) {
+	return writeJSON(dc.DatabaseConnection)
 }
 
 func (dc *DatabaseConnection) Cols() []string {
@@ -246,8 +244,8 @@ type DatabaseReplicas struct {
 
 var _ Displayable = &DatabaseReplicas{}
 
-func (dr *DatabaseReplicas) JSON(out io.Writer) error {
-	return writeJSON(dr.DatabaseReplicas, out)
+func (dr *DatabaseReplicas) JSON() (string, error) {
+	return writeJSON(dr.DatabaseReplicas)
 }
 
 func (dr *DatabaseReplicas) Cols() []string {
@@ -309,8 +307,8 @@ type DatabasePools struct {
 
 var _ Displayable = &DatabasePools{}
 
-func (dp *DatabasePools) JSON(out io.Writer) error {
-	return writeJSON(dp.DatabasePools, out)
+func (dp *DatabasePools) JSON() (string, error) {
+	return writeJSON(dp.DatabasePools)
 }
 
 func (dp *DatabasePools) Cols() []string {
@@ -359,8 +357,8 @@ type DatabaseMaintenanceWindow struct {
 
 var _ Displayable = &DatabaseMaintenanceWindow{}
 
-func (dmw *DatabaseMaintenanceWindow) JSON(out io.Writer) error {
-	return writeJSON(dmw.DatabaseMaintenanceWindow, out)
+func (dmw *DatabaseMaintenanceWindow) JSON() (string, error) {
+	return writeJSON(dmw.DatabaseMaintenanceWindow)
 }
 
 func (dmw *DatabaseMaintenanceWindow) Cols() []string {
@@ -399,8 +397,8 @@ type DatabaseDBs struct {
 
 var _ Displayable = &DatabaseDBs{}
 
-func (db *DatabaseDBs) JSON(out io.Writer) error {
-	return writeJSON(db.DatabaseDBs, out)
+func (db *DatabaseDBs) JSON() (string, error) {
+	return writeJSON(db.DatabaseDBs)
 }
 
 func (db *DatabaseDBs) Cols() []string {

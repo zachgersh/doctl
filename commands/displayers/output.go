@@ -28,7 +28,7 @@ type Displayable interface {
 	Cols() []string
 	ColMap() map[string]string
 	KV() []map[string]interface{}
-	JSON(io.Writer) error
+	JSON() (string, error)
 }
 
 // Displayer has the display options, the item to display, and where to display to
@@ -41,38 +41,14 @@ type Displayer struct {
 	Out  io.Writer
 }
 
-// Display ends up rendering the content in one of two formats (text|json)
-func (d *Displayer) Display() error {
-	switch d.OutputType {
-	case "json":
-		if containsOnlyNilSlice(d.Item) {
-			_, err := d.Out.Write([]byte("[]"))
-			return err
-		}
-		return d.Item.JSON(d.Out)
-	case "text":
-		var cols []string
-		for _, c := range strings.Split(strings.Join(strings.Fields(d.ColumnList), ""), ",") {
-			if c != "" {
-				cols = append(cols, c)
-			}
-		}
-
-		return DisplayText(d.Item, d.Out, d.NoHeaders, cols)
-	default:
-		return fmt.Errorf("unknown output type")
-	}
-}
-
 // DisplayBetter ends up rendering the content in one of two formats (text|json)
-func (d *Displayer) DisplayBetter(displayable Displayable) error {
+func (d *Displayer) DisplayBetter(displayable Displayable) (string, error) {
 	switch d.OutputType {
 	case "json":
 		if containsOnlyNilSlice(displayable) {
-			_, err := d.Out.Write([]byte("[]"))
-			return err
+			return "[]", nil
 		}
-		return displayable.JSON(d.Out)
+		return displayable.JSON()
 	case "text":
 		var cols []string
 		for _, c := range strings.Split(strings.Join(strings.Fields(d.ColumnList), ""), ",") {
@@ -81,15 +57,16 @@ func (d *Displayer) DisplayBetter(displayable Displayable) error {
 			}
 		}
 
-		return DisplayText(displayable, d.Out, d.NoHeaders, cols)
+		return DisplayText(displayable, d.NoHeaders, cols)
 	default:
-		return fmt.Errorf("unknown output type")
+		return "", fmt.Errorf("unknown output type")
 	}
 }
 
 // DisplayText writes tabbed content to the passed in io.Writer
 // while potentially adding or removing headers.
-func DisplayText(item Displayable, out io.Writer, noHeaders bool, includeCols []string) error {
+func DisplayText(item Displayable, noHeaders bool, includeCols []string) (string, error) {
+	out := bytes.NewBuffer([]byte{})
 	w := new(tabwriter.Writer)
 	w.Init(out, 0, 0, 4, ' ', 0)
 
@@ -103,7 +80,7 @@ func DisplayText(item Displayable, out io.Writer, noHeaders bool, includeCols []
 		for _, k := range cols {
 			col := item.ColMap()[k]
 			if col == "" {
-				return fmt.Errorf("unknown column %q", k)
+				return "", fmt.Errorf("unknown column %q", k)
 			}
 
 			headers = append(headers, col)
@@ -137,23 +114,26 @@ func DisplayText(item Displayable, out io.Writer, noHeaders bool, includeCols []
 		fmt.Fprintf(w, format+"\n", values...)
 	}
 
-	return w.Flush()
+	if err := w.Flush(); err != nil {
+		return "", fmt.Errorf("failed to flush buffer text: %s", err)
+	}
+
+	return out.String(), nil
 }
 
-func writeJSON(item interface{}, w io.Writer) error {
+func writeJSON(item interface{}) (string, error) {
 	b, err := json.Marshal(item)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	var out bytes.Buffer
 	err = json.Indent(&out, b, "", "  ")
 	if err != nil {
-		return err
+		return "", err
 	}
-	_, err = out.WriteTo(w)
 
-	return err
+	return out.String(), nil
 }
 
 // containsOnlyNiSlice returns true if the given interface's concrete type is

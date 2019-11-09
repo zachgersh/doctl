@@ -14,7 +14,6 @@ limitations under the License.
 package displayers
 
 import (
-	"io"
 	"strings"
 
 	"github.com/digitalocean/doctl/do"
@@ -26,8 +25,8 @@ type Certificate struct {
 
 var _ Displayable = &Certificate{}
 
-func (c *Certificate) JSON(out io.Writer) error {
-	return writeJSON(c.Certificates, out)
+func (c *Certificate) JSON() (string, error) {
+	return writeJSON(c.Certificates)
 }
 
 func (c *Certificate) Cols() []string {

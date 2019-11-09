@@ -14,7 +14,6 @@ limitations under the License.
 package displayers
 
 import (
-	"io"
 	"strconv"
 	"strings"
 
@@ -27,8 +26,8 @@ type Snapshot struct {
 
 var _ Displayable = &Snapshot{}
 
-func (s *Snapshot) JSON(out io.Writer) error {
-	return writeJSON(s.Snapshots, out)
+func (s *Snapshot) JSON() (string, error) {
+	return writeJSON(s.Snapshots)
 }
 
 func (s *Snapshot) Cols() []string {

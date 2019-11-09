@@ -14,8 +14,6 @@ limitations under the License.
 package displayers
 
 import (
-	"io"
-
 	"github.com/digitalocean/doctl/do"
 )
 
@@ -25,8 +23,8 @@ type Region struct {
 
 var _ Displayable = &Region{}
 
-func (re *Region) JSON(out io.Writer) error {
-	return writeJSON(re.Regions, out)
+func (re *Region) JSON() (string, error) {
+	return writeJSON(re.Regions)
 }
 
 func (re *Region) Cols() []string {

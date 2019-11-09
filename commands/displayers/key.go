@@ -14,8 +14,6 @@ limitations under the License.
 package displayers
 
 import (
-	"io"
-
 	"github.com/digitalocean/doctl/do"
 )
 
@@ -25,8 +23,8 @@ type Key struct {
 
 var _ Displayable = &Key{}
 
-func (ke *Key) JSON(out io.Writer) error {
-	return writeJSON(ke.Keys, out)
+func (ke *Key) JSON() (string, error) {
+	return writeJSON(ke.Keys)
 }
 
 func (ke *Key) Cols() []string {

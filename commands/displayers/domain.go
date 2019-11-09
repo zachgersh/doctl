@@ -14,8 +14,6 @@ limitations under the License.
 package displayers
 
 import (
-	"io"
-
 	"github.com/digitalocean/doctl/do"
 )
 
@@ -25,8 +23,8 @@ type Domain struct {
 
 var _ Displayable = &Domain{}
 
-func (d *Domain) JSON(out io.Writer) error {
-	return writeJSON(d.Domains, out)
+func (d *Domain) JSON() (string, error) {
+	return writeJSON(d.Domains)
 }
 
 func (d *Domain) Cols() []string {
@@ -56,8 +54,8 @@ type DomainRecord struct {
 	DomainRecords do.DomainRecords
 }
 
-func (dr *DomainRecord) JSON(out io.Writer) error {
-	return writeJSON(dr.DomainRecords, out)
+func (dr *DomainRecord) JSON() (string, error) {
+	return writeJSON(dr.DomainRecords)
 }
 
 func (dr *DomainRecord) Cols() []string {

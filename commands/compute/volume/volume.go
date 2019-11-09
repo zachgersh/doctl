@@ -1,10 +1,10 @@
-package account
+package volume
 
 import "github.com/mitchellh/cli"
 
 type Base struct{}
 
-//New returns our base account command that only holds help
+//New returns our base volume command that only holds help
 func New() *Base {
 	return &Base{}
 }
@@ -14,7 +14,7 @@ func (b *Base) Run(args []string) int {
 }
 
 func (b *Base) Synopsis() string {
-	return "account commands"
+	return ""
 }
 
 func (b *Base) Help() string {

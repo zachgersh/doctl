@@ -15,7 +15,6 @@ package displayers
 
 import (
 	"fmt"
-	"io"
 	"strings"
 
 	"github.com/digitalocean/doctl/do"
@@ -27,8 +26,8 @@ type Droplet struct {
 
 var _ Displayable = &Droplet{}
 
-func (d *Droplet) JSON(out io.Writer) error {
-	return writeJSON(d.Droplets, out)
+func (d *Droplet) JSON() (string, error) {
+	return writeJSON(d.Droplets)
 }
 
 func (d *Droplet) Cols() []string {

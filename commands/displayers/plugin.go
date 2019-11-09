@@ -13,8 +13,6 @@ limitations under the License.
 
 package displayers
 
-import "io"
-
 type PlugDesc struct {
 	Path string `json:"path"`
 	Name string `json:"name"`
@@ -26,8 +24,8 @@ type Plugin struct {
 
 var _ Displayable = &Plugin{}
 
-func (p *Plugin) JSON(out io.Writer) error {
-	return writeJSON(p.Plugins, out)
+func (p *Plugin) JSON() (string, error) {
+	return writeJSON(p.Plugins)
 }
 
 func (p *Plugin) Cols() []string {

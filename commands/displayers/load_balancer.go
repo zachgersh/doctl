@@ -15,7 +15,6 @@ package displayers
 
 import (
 	"fmt"
-	"io"
 	"reflect"
 	"strings"
 
@@ -28,8 +27,8 @@ type LoadBalancer struct {
 
 var _ Displayable = &LoadBalancer{}
 
-func (lb *LoadBalancer) JSON(out io.Writer) error {
-	return writeJSON(lb.LoadBalancers, out)
+func (lb *LoadBalancer) JSON() (string, error) {
+	return writeJSON(lb.LoadBalancers)
 }
 
 func (lb *LoadBalancer) Cols() []string {

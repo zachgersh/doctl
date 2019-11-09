@@ -15,7 +15,6 @@ package displayers
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/digitalocean/doctl/do"
 )
@@ -26,8 +25,8 @@ type FloatingIP struct {
 
 var _ Displayable = &FloatingIP{}
 
-func (fi *FloatingIP) JSON(out io.Writer) error {
-	return writeJSON(fi.FloatingIPs, out)
+func (fi *FloatingIP) JSON() (string, error) {
+	return writeJSON(fi.FloatingIPs)
 }
 
 func (fi *FloatingIP) Cols() []string {

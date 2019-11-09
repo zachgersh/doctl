@@ -7,64 +7,67 @@ import (
 	"github.com/digitalocean/doctl/commands/displayers"
 	"github.com/digitalocean/doctl/do"
 	"github.com/gobwas/glob"
-	"github.com/spf13/cobra"
+	"github.com/mitchellh/cli"
+	flag "github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
+//List is in charge holds the region / flag set data required to retrieve
+//volume data.
+type List struct {
+	region    string
+	displayer displayers.Displayer
+	service   do.VolumesService
+	v         *viper.Viper
+	ui        cli.Ui
+	fs        *flag.FlagSet
+}
+
 // NewList returns a new volume command thing.
-func NewList(v *viper.Viper, client do.VolumesService, displayer displayers.Displayer) *cobra.Command {
-	volumeList := &VolumeList{
-		Service:   client,
-		Displayer: displayer,
+func NewList(v *viper.Viper, client do.VolumesService, displayer displayers.Displayer, ui cli.Ui) *List {
+	list := &List{
+		displayer: displayer,
+		service:   client,
+		v:         v,
+		ui:        ui,
 	}
 
-	listCmd := &cobra.Command{
-		Use:     "list",
-		Short:   "list",
-		Aliases: []string{"ls"},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return volumeList.PreRun(args)
-		},
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return volumeList.Run()
-		},
+	fs := flag.NewFlagSet("", flag.ContinueOnError)
+	fs.StringVarP(&list.region, doctl.ArgRegionSlug, "", "", "Volume Region")
+
+	list.fs = fs
+
+	return list
+}
+
+//Run parses the provided flags before returning the rest of the non
+//flag arguments to be used as globs when searching for a matching
+//volume.
+func (l *List) Run(args []string) int {
+	if err := l.fs.Parse(args); err != nil {
+		return 1
 	}
 
-	set := listCmd.Flags()
-	set.StringVarP(&volumeList.Region, doctl.ArgRegionSlug, "", "", "Volume Region")
+	globs := l.fs.Args()
 
-	return listCmd
-}
-
-type VolumeList struct {
-	Globs     []string
-	Region    string
-	Displayer displayers.Displayer
-	Service   do.VolumesService
-}
-
-func (vl *VolumeList) PreRun(args []string) error {
-	vl.Globs = args
-	return nil
-}
-
-func (vl *VolumeList) Run() error {
 	var matches []glob.Glob
-	for _, globStr := range vl.Globs {
+	for _, globStr := range globs {
 		g, err := glob.Compile(globStr)
 		if err != nil {
-			return fmt.Errorf("unknown glob %q", globStr)
+			l.ui.Error(fmt.Sprintf("unknown glob %q", globStr))
+			return 1
 		}
 
 		matches = append(matches, g)
 	}
 
-	list, err := vl.Service.List()
+	list, err := l.service.List()
 	if err != nil {
-		return err
+		l.ui.Error(fmt.Sprintf("failed to list volumes: %s", err))
+		return 1
 	}
-	var matchedList []do.Volume
 
+	var matchedList []do.Volume
 	for _, volume := range list {
 		var skip = true
 		if len(matches) == 0 {
@@ -80,8 +83,8 @@ func (vl *VolumeList) Run() error {
 			}
 		}
 
-		if !skip && vl.Region != "" {
-			if vl.Region != volume.Region.Slug {
+		if !skip && l.region != "" {
+			if l.region != volume.Region.Slug {
 				skip = true
 			}
 		}
@@ -92,5 +95,13 @@ func (vl *VolumeList) Run() error {
 	}
 
 	item := &displayers.Volume{Volumes: matchedList}
-	return vl.Displayer.DisplayBetter(item)
+	content, err := l.displayer.DisplayBetter(item)
+	if err != nil {
+		l.ui.Error(fmt.Sprintf("failed to display volumes: %s", err))
+		return 1
+	}
+
+	l.ui.Output(content)
+
+	return 0
 }

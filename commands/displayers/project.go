@@ -14,8 +14,6 @@ limitations under the License.
 package displayers
 
 import (
-	"io"
-
 	"github.com/digitalocean/doctl/do"
 )
 
@@ -25,8 +23,8 @@ type Project struct {
 
 var _ Displayable = &Project{}
 
-func (p *Project) JSON(out io.Writer) error {
-	return writeJSON(p.Projects, out)
+func (p *Project) JSON() (string, error) {
+	return writeJSON(p.Projects)
 }
 
 func (p *Project) Cols() []string {
@@ -87,8 +85,8 @@ type ProjectResource struct {
 
 var _ Displayable = &ProjectResource{}
 
-func (p *ProjectResource) JSON(out io.Writer) error {
-	return writeJSON(p.ProjectResources, out)
+func (p *ProjectResource) JSON() (string, error) {
+	return writeJSON(p.ProjectResources)
 }
 
 func (p *ProjectResource) Cols() []string {

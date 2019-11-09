@@ -14,8 +14,6 @@ limitations under the License.
 package displayers
 
 import (
-	"io"
-
 	"github.com/digitalocean/doctl/do"
 )
 
@@ -25,8 +23,8 @@ type Account struct {
 
 var _ Displayable = &Account{}
 
-func (a *Account) JSON(out io.Writer) error {
-	return writeJSON(a.Account, out)
+func (a *Account) JSON() (string, error) {
+	return writeJSON(a.Account)
 }
 
 func (a *Account) Cols() []string {

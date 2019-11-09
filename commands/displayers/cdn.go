@@ -14,8 +14,6 @@ limitations under the License.
 package displayers
 
 import (
-	"io"
-
 	"github.com/digitalocean/doctl/do"
 )
 
@@ -25,8 +23,8 @@ type CDN struct {
 
 var _ Displayable = &CDN{}
 
-func (c *CDN) JSON(out io.Writer) error {
-	return writeJSON(c.CDNs, out)
+func (c *CDN) JSON() (string, error) {
+	return writeJSON(c.CDNs)
 }
 
 func (c *CDN) Cols() []string {

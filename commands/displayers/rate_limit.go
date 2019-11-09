@@ -14,8 +14,6 @@ limitations under the License.
 package displayers
 
 import (
-	"io"
-
 	"github.com/digitalocean/doctl/do"
 )
 
@@ -25,8 +23,8 @@ type RateLimit struct {
 
 var _ Displayable = &RateLimit{}
 
-func (rl *RateLimit) JSON(out io.Writer) error {
-	return writeJSON(rl.Rate, out)
+func (rl *RateLimit) JSON() (string, error) {
+	return writeJSON(rl.Rate)
 }
 
 func (rl *RateLimit) Cols() []string {

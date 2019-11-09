@@ -15,7 +15,6 @@ package displayers
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/digitalocean/doctl/do"
 )
@@ -26,8 +25,8 @@ type Size struct {
 
 var _ Displayable = &Size{}
 
-func (si *Size) JSON(out io.Writer) error {
-	return writeJSON(si.Sizes, out)
+func (si *Size) JSON() (string, error) {
+	return writeJSON(si.Sizes)
 }
 
 func (si *Size) Cols() []string {

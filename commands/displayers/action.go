@@ -14,8 +14,6 @@ limitations under the License.
 package displayers
 
 import (
-	"io"
-
 	"github.com/digitalocean/doctl/do"
 )
 
@@ -25,8 +23,8 @@ type Action struct {
 
 var _ Displayable = &Action{}
 
-func (a *Action) JSON(out io.Writer) error {
-	return writeJSON(a.Actions, out)
+func (a *Action) JSON() (string, error) {
+	return writeJSON(a.Actions)
 }
 
 func (a *Action) Cols() []string {
